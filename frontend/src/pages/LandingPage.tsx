@@ -1,45 +1,47 @@
-import React, { useState, useEffect, useContext } from "react";
-import httpClient from "../httpClient";
-import { AppContext } from "../store/appContext";
+import React, { useContext } from 'react';
+import { AppContext } from '../store/appContext';
+import CreatePost from '../components/CreatePost';
+import PostsDisplay from '../components/PostsDisplay';
+import Navbar from '@/components/Navbar';
+import ProfilePicture from '@/components/ProfilePicture';
 
 const LandingPage: React.FC = () => {
     const { state, actions } = useContext(AppContext);
-    const [message, setMessage] = useState<string>("Loading...");
 
     const logout = () => {
         actions.logout();
-    }
-
-    const fetchMessage = async () => {
-          const fetchedMessage = await actions.getMessage();
-          console.log(fetchMessage);
-          setMessage(fetchedMessage); // Set the message once it's fetched
     };
-
-    useEffect(() => {
-        if (state.token) {
-          fetchMessage();
-        } else {
-          setMessage("You are not logged in."); // Reset the message if the user logs out
-        }
-    }, [state.token]);
-
 
     return (
         <div>
-            <h1>Welcome to the Home Page</h1>
             {state.token != null ? (
                 <>
-                    <h1>{state.token}</h1>
-                    <button onClick={logout}>Logout</button>
-                    <h1>{message}</h1>
+                    <CreatePost />
+                    <PostsDisplay/>
                 </>
             ) : (
-                <div>
-                    <p>You are not logged in.</p>
-                    <a href="/login"><button>Login</button></a>
-                    <a href="/register"><button>Register</button></a>
+            <div className="flex items-center justify-center min-h-screen bg-gray-100"> 
+                <div className="text-center">
+                    <h1 className="text-4xl font-extrabold text-gray-800 mb-4">
+                        Welcome to echo!
+                    </h1>
+                    <p className="text-lg text-gray-600 mb-8">
+                        Log in or create an account to start sharing your thoughts.
+                    </p>
+                    <div className="flex justify-center space-x-4">
+                        <a href="/login">
+                            <button className="bg-blue-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-600 transition-all">
+                                Login
+                            </button>
+                        </a>
+                        <a href="/register">
+                            <button className="bg-white text-green-500 font-bold py-3 px-8 rounded-lg border border-green-500 hover:bg-green-500 hover:text-white transition-all">
+                                Register
+                            </button>
+                        </a>
+                    </div>
                 </div>
+            </div>
             )}
         </div>
     );

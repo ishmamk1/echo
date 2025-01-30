@@ -9,29 +9,9 @@ from flask_jwt_extended import JWTManager
 
 from service.firestore import db, check_user_exists, register_new_user, check_email_exists
 
-auth = Blueprint('auth', __name__)
+from .models import Post, UserProfileImg, sql_db
 
-@auth.route("/")
-def hello():
-    if not db:
-        return "Firestore database is not initialized."
-    else:
-        try:
-            # Access the collection
-            test_collection_ref = db.collection("testCollection")
-            
-            # Retrieve all documents in the collection
-            docs = test_collection_ref.stream()
-            
-            # Prepare a list to hold the document data
-            all_docs = []
-            for doc in docs:
-                all_docs.append({doc.id: doc.to_dict()})
-            
-            # Return the documents as a JSON response
-            return jsonify(all_docs), 200
-        except Exception as e:
-            return f"An error occurred: {str(e)}", 500
+auth = Blueprint('auth', __name__)
 
 @auth.route("/token", methods=["POST"])
 def create_token():
@@ -72,6 +52,8 @@ def register():
         return jsonify({"error": "Email already exists"}), 400
 
     user = register_new_user(username, email, password)
+    user_profile_img = UserProfileImg(username=username)
+    sql_db.session.add(user_profile_img)
+    sql_db.session.commit()
     access_token = create_access_token(identity=username)
     return jsonify(access_token=access_token)
-

@@ -1,5 +1,4 @@
-// src/context/AppProvider.tsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { AppContext, AppState } from "./appContext";
 import httpClient from "../httpClient";
 
@@ -23,27 +22,29 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
 
   const setUsername = (username: string) => {
     setState((prevState) => ({ ...prevState, username }));
-    sessionStorage.setItem("email", username);
+    sessionStorage.setItem("username", username); // Fixed this line
+  };
+
+  const getToken = () => {
+    return state.token;
+  };
+
+  const getUsername = () => {
+    return state.username;
   };
 
   const logout = () => {
     setState({ token: null, email: null, username: null });
     sessionStorage.removeItem("token");
+    sessionStorage.removeItem("email");
     sessionStorage.removeItem("username");
   };
 
   const getMessage = async () => {
-    const opts: RequestInit = {
-        method: "GET",
-        headers: {
-            "Authorization": "Bearer " + state.token,
-        },
-    };
-
     const response = await httpClient.get("//127.0.0.1:5000/message", {
-            headers: {
-                "Authorization": "Bearer " + state.token,
-            },
+      headers: {
+        Authorization: "Bearer " + state.token,
+      },
     });
     return response.data.hello;
   };
@@ -51,7 +52,15 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   // Context value to provide to children
   const contextValue = {
     state,
-    actions: { setToken, setEmail, logout, getMessage, setUsername },
+    actions: {
+      setToken,
+      setEmail,
+      setUsername,
+      getToken, // Added getToken
+      getUsername, // Added getUsername
+      logout,
+      getMessage,
+    },
   };
 
   return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;

@@ -3,6 +3,9 @@ import httpClient from "../httpClient";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../store/appContext";
 
+import { Box, Button, Input, Stack, Heading } from "@chakra-ui/react";
+
+
 const LoginPage: React.FC = () => {
     const { state, actions } = useContext(AppContext);
     const [username, setUsername] = useState<string>("");
@@ -23,7 +26,7 @@ const LoginPage: React.FC = () => {
             sessionStorage.setItem("username", username);
             actions.setToken(response.data.access_token);
             console.log("Token" + state.token);
-            actions.setEmail(username);
+            actions.setUsername(username);
             console.log("Username"+ state.username);
             navigate("/");
         } else if (response.status == 401) {
@@ -33,25 +36,44 @@ const LoginPage: React.FC = () => {
     };
 
     return (
-        <div>
-            <h1>Login To Your Account</h1>
-            <form>
-                <label>Username:</label>
-                <input type="text"
-                    value={username} 
-                    onChange={(e) => setUsername(e.target.value)}>
-                </input>
-                <label>Password:</label>
-                <input type="text"
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)}>
-                </input>
-                <button type="button" onClick={loginUser}>Submit</button>
-            </form>
-        </div>
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bg="gray.100">
+            <Box bg="white" p={8} rounded="lg" shadow="lg" width="full" maxWidth="sm">
+                <Heading size="lg" textAlign="center" mb={6}>
+                    Login To Your Account
+                </Heading>
+                <Stack>
+                    <Box>
+                        <Input
+                            id="username"
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Enter your username"
+                            mb={4}
+                        />
+                    </Box>
+                    <Box>
+                        <Input
+                            id="password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Enter your password"
+                            mb={6}
+                        />
+                    </Box>
+                    <Button
+                        width="full"
+                        onClick={loginUser}
+                        colorScheme="blue"
+                        size="lg"
+                    >
+                        Submit
+                    </Button>
+                </Stack>
+            </Box>
+        </Box>
     );
-  
-  
 };
 
 export default LoginPage;

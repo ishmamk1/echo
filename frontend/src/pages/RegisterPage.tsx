@@ -3,6 +3,8 @@ import httpClient from "../httpClient";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../store/appContext";
 
+import { Box, Button, Input, Stack, Heading } from "@chakra-ui/react";
+
 const RegisterPage: React.FC = () => {
     const { state, actions } = useContext(AppContext);
     const [username, setUsername] = useState<string>("");
@@ -35,27 +37,53 @@ const RegisterPage: React.FC = () => {
     };
 
     return (
-        <div>
-            <h1>Register To Your Account</h1>
-            <form>
-                <label>Username:</label>
-                    <input type="text"
-                        value={username} 
-                        onChange={(e) => setUsername(e.target.value)}>
-                </input>
-                <label>Email:</label>
-                <input type="text"
-                    value={email} 
-                    onChange={(e) => setEmail(e.target.value)}>
-                </input>
-                <label>Password:</label>
-                <input type="text"
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)}>
-                </input>
-                <button type="button" onClick={registerUser}>Register</button>
-            </form>
-        </div>
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bg="gray.100">
+            <Box bg="white" p={8} rounded="lg" shadow="lg" width="full" maxWidth="sm">
+                <Heading size="lg" textAlign="center" mb={6}>
+                    Register To Your Account
+                </Heading>
+                <Stack>
+                    <Box>
+                        <Input
+                            id="username"
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Enter your username"
+                            mb={4}
+                        />
+                    </Box>
+                    <Box>
+                        <Input
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Enter your email"
+                            mb={4}
+                        />
+                    </Box>
+                    <Box>
+                        <Input
+                            id="password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Enter your password"
+                            mb={6}
+                        />
+                    </Box>
+                    <Button
+                        width="full"
+                        onClick={registerUser}
+                        colorScheme="blue"
+                        size="lg"
+                    >
+                        Register
+                    </Button>
+                </Stack>
+            </Box>
+        </Box>
     );
   
   
